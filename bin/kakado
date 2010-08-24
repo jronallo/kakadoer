@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'kakadoer'
+require 'rubygems'
+require 'trollop'
+require 'pp'
+
+opts = Trollop::options do
+  banner <<-EOS
+This script take a directory of TIF files and creates JP2 access copies.
+
+Usage:
+  kakado --input tifs --output jp2s 
+
+where options are:
+EOS
+  opt :input, "Directory of batch of tifs", :required => true, :type => String
+  opt :output, "Directory to place new JP2s", :required => true, :type => String
+  opt :verbose, "Create verbose output"
+end
+
+kakado = Kakadoer.new(opts[:input], opts[:output])
+
+puts "Number of files to process: " + kakado.filenames.length.to_s + "\n\n"
+
+kakado.create_jp2s_with_output(opts[:verbose])
+puts kakado.log.join("\n")

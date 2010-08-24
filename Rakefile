@@ -5,12 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "kakadoer"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Simple wrapper around kakadu_compress}
+    gem.description = %Q{Simple wrapper around kakadu_compress to convert a batch of TIFs to JP2s}
     gem.email = "jronallo@gmail.com"
     gem.homepage = "http://github.com/jronallo/kakadoer"
     gem.authors = ["Jason Ronallo"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "shoulda", ">= 0"
+    gem.add_dependency "trollop", ">= 0"
+    gem.files = FileList["[A-Z]*", "{bin,lib}/**/*"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
