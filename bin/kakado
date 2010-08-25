@@ -7,21 +7,52 @@ require 'pp'
 
 opts = Trollop::options do
   banner <<-EOS
-This script take a directory of TIF files and creates JP2 access copies.
+This script take a directory of TIF files and creates JP2 access copies. If an
+input directory is not set it will use the directory from which the script is run
+to look for tifs. If an output directory is not set it will pick a directory up
+one from the current directory and save the files in the jp2s directory. If that
+directory is not present it will create it.
 
 Usage:
   kakado --input tifs --output jp2s 
 
 where options are:
 EOS
-  opt :input, "Directory of batch of tifs", :required => true, :type => String
-  opt :output, "Directory to place new JP2s", :required => true, :type => String
+  opt :input, "Directory of batch of tifs", :type => String
+  opt :output, "Directory to place new JP2s", :type => String
   opt :verbose, "Create verbose output"
 end
 
-kakado = Kakadoer.new(opts[:input], opts[:output])
+if opts[:input]
+  input = opts[:input]
+else
+  input = Dir.pwd
+end
 
-puts "Number of files to process: " + kakado.filenames.length.to_s + "\n\n"
+if opts[:output]
+  output = opts[:output]
+else
+  output = File.join(Dir.pwd, '..', 'jp2s')  
+  unless File.exists? output
+    Dir.mkdir(output)
+  end
+end
+
+kakado = Kakadoer.new(input, output)
+
+num_to_process = "Number of files to process: " + kakado.filenames.length.to_s + "\n\n"
+puts num_to_process
 
 kakado.create_jp2s_with_output(opts[:verbose])
-puts kakado.log.join("\n")
+kakado_output = kakado.log.join("\n")
+
+puts kakado_output
+timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
+File.open('output-' + timestamp + '.txt', 'w') do |fh|
+  fh.puts num_to_process
+  fh.puts kakado_output
+end
+
+
+
+

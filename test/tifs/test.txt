@@ -1,0 +1,2 @@
+This file is present to test that it doesn't try to process files that don't
+end with '.tif'

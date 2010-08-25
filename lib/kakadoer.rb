@@ -32,7 +32,7 @@ class Kakadoer
   end
   
   def tif_files
-    Dir.glob(File.expand_path(File.join(@input_directory, '*')))
+    Dir.glob(File.expand_path(File.join(@input_directory, '*.tif')))
   end
   
   def filenames
