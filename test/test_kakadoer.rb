@@ -21,7 +21,7 @@ class TestKakadoer < Test::Unit::TestCase
 
     should "create JP2s without output" do
       @kakado.create_jp2s
-      assert_equal 3, Dir.entries(@output_directory).size - 2
+      assert_equal 3, Dir.entries(@output_directory).size - 3 # delete 3 for ., .., and .gitignore
     end
 
     should "create JP2s with output" do
@@ -53,7 +53,7 @@ class TestKakadoer < Test::Unit::TestCase
 
     should "create JP2s without output" do
       @kakado.create_jp2s
-      assert_equal 2, Dir.entries(@output_directory).size - 2
+      assert_equal 2, Dir.entries(@output_directory).size - 3 # delete 3 for ., .., and .gitignore
     end
 
     should "create a JP2 with actual content from a jpg" do
