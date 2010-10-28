@@ -20,3 +20,7 @@ pkg
 
 ## PROJECT::SPECIFIC
 .rvmrc
+
+!.gitignore
+test/tmp/*
+
