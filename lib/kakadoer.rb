@@ -32,7 +32,7 @@ class Kakadoer
   end
   
   def tif_files
-    Dir.glob(File.expand_path(File.join(@input_directory, '*.tif')))
+    Dir.glob(File.expand_path(File.join(Dir.pwd, '*.{tif,JPG,jpg}')))
   end
   
   def filenames
@@ -40,6 +40,9 @@ class Kakadoer
   end
   
   private
+  
+  # The general commandline that Djatoka uses to compress images is:
+  # kdu_compress -quiet -i <tmpTiff> -o <outoutJP2> -slope 51651,51337,51186,50804,50548,50232 Cprecincts="{256,256},{256,256},{128,128}" Clayers=6 Corder=RPCL ORGtparts=R Cblk="{32,32}" ORGgen_plt=yes Creversible=yes
   
   def kakado(file_path)
     `kdu_compress -i #{file_path} -o #{output_path(file_path)} -rate 0.5 Clayers=1 Clevels=7 "Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16}" "Corder=RPCL" "ORGgen_plt=yes" "ORGtparts=R" "Cblk={32,32}" Cuse_sop=yes`
