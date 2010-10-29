@@ -68,6 +68,13 @@ class TestKakadoer < Test::Unit::TestCase
       end
     end
 
+    should "remove the temporary bmp files that are created" do
+      @kakado.create_jp2s
+      ['belltower', 'bubble'].each do |filename|
+        assert !File.exists?(File.join(@input_directory, filename + '.bmp'))
+      end
+    end
+
     should "create JP2s with output" do
       response = @kakado.create_jp2s_with_output
     end

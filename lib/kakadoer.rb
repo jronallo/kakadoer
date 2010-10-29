@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'RMagick'
 require 'tempfile'
 
@@ -26,10 +27,15 @@ class Kakadoer
         file_path = tif_tempfile_path(file_path)
       end
       response = kakado(file_path)
-      @log << response if @logger_verbose
+      if @logger_verbose
+        @log << response
+        puts file_path
+        #puts response; puts
+      end
       @log << output_path(file_path) if @logger
       @processed_num += 1
       @log << separator if @logger
+      FileUtils.rm tif_tempfile_path(file_path) if File.exists? tif_tempfile_path(file_path)
     end
     self
   end
@@ -37,7 +43,9 @@ class Kakadoer
   def tif_tempfile_path(file_path)
     magick_image = Magick::Image.read(file_path).first
     magick_image.write('bmp:' + tempfile(file_path))
-
+    # clean up for rmagick since it won't do it
+    magick_image.destroy!
+    GC.start
     tempfile(file_path)
   end
 
