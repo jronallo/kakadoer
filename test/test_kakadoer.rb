@@ -5,7 +5,7 @@ class TestKakadoer < Test::Unit::TestCase
     setup do
       @input_directory = 'test/tifs'
       @output_directory = 'test/tmp'
-      @kakado = Kakadoer.new(@input_directory, @output_directory)
+      @kakado = Kakadoer::Batch.new(@input_directory, @output_directory)
     end
     teardown do
       FileUtils.rm( Dir.glob(File.join(@output_directory, '*'))) #clean up
@@ -26,18 +26,20 @@ class TestKakadoer < Test::Unit::TestCase
 
     should "create JP2s with output" do
       response = @kakado.create_jp2s_with_output
+      assert response.log.join.include?("ERROR: ")
     end
 
     should "hold the number of tifs processed" do
       assert_equal 3, @kakado.create_jp2s.processed_num
     end
+
   end
 
   context "create a batrch of JP2s from JPGs" do
     setup do
       @input_directory = 'test/jpgs'
       @output_directory = 'test/tmp'
-      @kakado = Kakadoer.new(@input_directory, @output_directory)
+      @kakado = Kakadoer::Batch.new(@input_directory, @output_directory)
     end
     teardown do
       FileUtils.rm( Dir.glob(File.join(@output_directory, '*'))) #clean up
@@ -82,6 +84,7 @@ class TestKakadoer < Test::Unit::TestCase
     should "hold the number of jpgs processed" do
       assert_equal 2, @kakado.create_jp2s.processed_num
     end
+
   end
 
 

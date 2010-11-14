@@ -16,6 +16,7 @@ directory is not present it will create it.
 
 Usage:
   kakado --input tifs --output jp2s
+  kakado --file photo.tif
 
 where options are:
 EOS
@@ -23,6 +24,7 @@ EOS
   opt :output, "Directory to place new JP2s", :type => String
   opt :verbose, "Create verbose output"
   opt :ver, "Output the version number and exit."
+  opt :file, "Takes a tif file and creates the JP2 in the current working directory or --output directory", :type => String
 end
 
 if opts[:ver]
@@ -30,33 +32,39 @@ if opts[:ver]
   exit
 end
 
-if opts[:input]
-  input = opts[:input]
+if opts[:file]
+#  `kdu_compress -i #{opts[:file]} -o #{Dir.pwd}/. #{KAKADU_OPTIONS}`
+  output = Kakadoer::Command.new(opts[:file]).kakado
 else
-  input = Dir.pwd
-end
-
-if opts[:output]
-  output = opts[:output]
-else
-  output = File.join(Dir.pwd, '..', 'jp2s')
-  unless File.exists? output
-    Dir.mkdir(output)
+  if opts[:input]
+    input = opts[:input]
+  else
+    input = Dir.pwd
   end
-end
 
-kakado = Kakadoer.new(input, output)
+  if opts[:output]
+    output = opts[:output]
+  else
+    output = File.join(Dir.pwd, '..', 'jp2s')
+    unless File.exists? output
+      Dir.mkdir(output)
+    end
+  end
 
-num_to_process = "Number of files to process: " + kakado.filenames.length.to_s + "\n\n"
-puts num_to_process
+  kakado = Kakadoer::Batch.new(input, output)
 
-kakado.create_jp2s_with_output(opts[:verbose])
-kakado_output = kakado.log.join("\n")
+  num_to_process = kakado.filenames.length
+  puts "Number of files to process: " + num_to_process.to_s + "\n\n"
+  exit if num_to_process == 0
 
-puts kakado_output
-timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
-File.open('output-' + timestamp + '.txt', 'w') do |fh|
-  fh.puts num_to_process
-  fh.puts kakado_output
+  kakado.create_jp2s_with_output(opts[:verbose])
+  kakado_output = kakado.log.join("\n")
+
+  puts kakado_output
+  timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
+  File.open('output-' + timestamp + '.txt', 'w') do |fh|
+    fh.puts num_to_process
+    fh.puts kakado_output
+  end
 end
 
