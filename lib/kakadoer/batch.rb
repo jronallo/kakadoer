@@ -20,15 +20,21 @@ module Kakadoer
     def create_jp2s
       tif_files.each do |file_path|
         @log << file_path if @logger
+        if !File.size? file_path
+          next
+        end
         # convert jpg to tif
-        if is_a_jpg?(file_path)
+        if is_a_jpg?(file_path) or compressed_tif?(file_path)
           file_path = tif_tempfile_path(file_path)
         end
         begin
-          response = Command.new(file_path, @output_directory).kakado
+          cmd = Command.new(file_path, @output_directory)
+          response = cmd.kakado
         rescue
           @log << 'ERROR: ' + file_path
           next
+        ensure
+          cmd.remove_empty
         end
         if @logger_verbose
           @log << response
@@ -38,6 +44,7 @@ module Kakadoer
         @log << output_path(file_path) if @logger
         @processed_num += 1
         @log << separator if @logger
+        
         FileUtils.rm tempfile(file_path) if File.exists? tempfile(file_path)
       end
       self
@@ -58,6 +65,19 @@ module Kakadoer
 
     def is_a_jpg?(file_path)
       ['.JPG', '.jpg'].include? File.extname(file_path)
+    end
+    
+    def compressed_tif?(file_path)
+      if ['.tif', '.TIF'].include? extension(file_path)
+        compression = `identify -format "%C" #{file_path}`.chomp
+        if compression == 'None'
+          false
+        else
+          true
+        end
+      else
+        false
+      end
     end
 
     def separator

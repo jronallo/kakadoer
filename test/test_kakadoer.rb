@@ -16,21 +16,33 @@ class TestKakadoer < Test::Unit::TestCase
     end
 
     should "enumerate filenames in input directory" do
-      assert ['first', 'second', 'third'], @kakado.filenames
+      assert_equal ['compressed', 'empty', 'first', 'second', 'third'], @kakado.filenames
+    end
+    
+    should "have all expected JP2s created" do
+      @kakado.create_jp2s
+      ['compressed', 'first','second','third'].each do |name|
+        assert File.exists? "test/tmp/#{name}.jp2"
+      end
+    end
+    
+    should "not have the empty JP2 created" do
+      @kakado.create_jp2s
+      assert !File.exists?('test/tmp/empty.jp2')
     end
 
     should "create JP2s without output" do
       @kakado.create_jp2s
-      assert_equal 3, Dir.entries(@output_directory).size - 3 # delete 3 for ., .., and .gitignore
+      assert_equal 4, Dir.entries(@output_directory).size - 3 # delete 3 for ., .., and .gitignore
     end
 
     should "create JP2s with output" do
       response = @kakado.create_jp2s_with_output
-      assert response.log.join.include?("ERROR: ")
+      assert response.log
     end
 
     should "hold the number of tifs processed" do
-      assert_equal 3, @kakado.create_jp2s.processed_num
+      assert_equal 4, @kakado.create_jp2s.processed_num
     end
 
   end

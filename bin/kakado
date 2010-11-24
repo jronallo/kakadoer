@@ -57,14 +57,14 @@ else
   puts "Number of files to process: " + num_to_process.to_s + "\n\n"
   exit if num_to_process == 0
 
-  kakado.create_jp2s_with_output(opts[:verbose])
-  kakado_output = kakado.log.join("\n")
+  kakado.create_jp2s
+#  kakado_output = kakado.log.join("\n")
 
-  puts kakado_output
-  timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
-  File.open('output-' + timestamp + '.txt', 'w') do |fh|
-    fh.puts num_to_process
-    fh.puts kakado_output
-  end
+#  puts kakado_output
+#  timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
+#  File.open('output-' + timestamp + '.txt', 'w') do |fh|
+#    fh.puts num_to_process
+#    fh.puts kakado_output
+#  end
 end
 
