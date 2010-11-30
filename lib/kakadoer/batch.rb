@@ -85,7 +85,7 @@ module Kakadoer
     end
 
     def tif_files
-      Dir.glob(File.expand_path(File.join(@input_directory, '*.{tif,JPG,jpg}')))
+      Dir.glob(File.expand_path(File.join(@input_directory, '*.{TIF,tif,JPG,jpg}')))
     end
 
     def filenames
