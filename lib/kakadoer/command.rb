@@ -21,7 +21,9 @@ module Kakadoer
     end
 
     def check_file
-      output = `identify #{file_path} 2>&1`
+      #FIXME: this fails if file_path includes spaces, but this isn't the right place to fix it.
+      # It _should_fail if it has spaces, but should never get to this point having spaces.
+      output = `identify #{file_path} 2>&1` 
       if output.include?("identify: ") and !output.include?('wrong data type 7 for "RichTIFFIPTC"; tag ignored.')
         raise Kakadoer::MalformedImageError
       end
