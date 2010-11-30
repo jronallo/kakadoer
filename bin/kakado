@@ -25,6 +25,7 @@ EOS
   opt :verbose, "Create verbose output"
   opt :ver, "Output the version number and exit."
   opt :file, "Takes a tif file and creates the JP2 in the current working directory or --output directory", :type => String
+  opt :cmd, "Output the kakadu command that will be used when used in conjunction with --file."
 end
 
 if opts[:ver]
@@ -34,7 +35,9 @@ end
 
 if opts[:file]
 #  `kdu_compress -i #{opts[:file]} -o #{Dir.pwd}/. #{KAKADU_OPTIONS}`
-  output = Kakadoer::Command.new(opts[:file]).kakado
+  command = Kakadoer::Command.new(opts[:file])
+  puts command.kakado_cmd if opts[:cmd]
+  output = command.kakado
 else
   if opts[:input]
     input = opts[:input]
