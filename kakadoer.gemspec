@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{kakadoer}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason Ronallo"]
-  s.date = %q{2010-11-30}
+  s.date = %q{2010-12-02}
   s.default_executable = %q{kakado}
   s.description = %q{Simple wrapper around kakadu_compress to convert a batch of TIFs to JP2s}
   s.email = %q{jronallo@gmail.com}

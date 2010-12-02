@@ -24,11 +24,10 @@ module Kakadoer
       #FIXME: this fails if file_path includes spaces, but this isn't the right place to fix it.
       # It _should_fail if it has spaces, but should never get to this point having spaces.
       output = `identify #{file_path} 2>&1` 
-      if output.include?("identify: ") and (
-        !output.include?('wrong data type 7 for "RichTIFFIPTC"; tag ignored.') or
-        !output.include?('incorrect count for field "MinSampleValue"') or
+      if output.include?("identify: ") and 
+        !output.include?('wrong data type 7 for "RichTIFFIPTC"; tag ignored.') and
+        !output.include?('incorrect count for field "MinSampleValue"') and
         !output.include?('incorrect count for field "MaxSampleValue"')
-        )
         raise Kakadoer::MalformedImageError
       end
     end
