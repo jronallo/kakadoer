@@ -33,6 +33,7 @@ if opts[:ver]
   exit
 end
 
+# FIXME: file option does not work for jpgs
 if opts[:file]
 #  `kdu_compress -i #{opts[:file]} -o #{Dir.pwd}/. #{KAKADU_OPTIONS}`
   command = Kakadoer::Command.new(opts[:file])

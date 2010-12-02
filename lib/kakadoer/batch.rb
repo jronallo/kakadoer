@@ -52,7 +52,7 @@ module Kakadoer
 
     def tif_tempfile_path(file_path)
       magick_image = Magick::Image.read(file_path).first
-      magick_image.write('bmp:' + tempfile(file_path))
+      magick_image.write('ppm:' + tempfile(file_path))
       # clean up for rmagick since it won't do it
       magick_image.destroy!
       GC.start
@@ -60,7 +60,7 @@ module Kakadoer
     end
 
     def tempfile(file_path)
-      File.expand_path(File.join(@input_directory, filename(file_path) + '.bmp'))
+      File.expand_path(File.join(@input_directory, filename(file_path) + '.ppm'))
     end
 
     def is_a_jpg?(file_path)
