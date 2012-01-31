@@ -10,7 +10,7 @@ module Kakadoer
 
     def kakado
       check_file
-      `#{kakado_cmd}`
+      puts `#{kakado_cmd}`
       remove_empty
     end
 
@@ -27,7 +27,9 @@ module Kakadoer
       if output.include?("identify: ") and 
         !output.include?('wrong data type 7 for "RichTIFFIPTC"; tag ignored.') and
         !output.include?('incorrect count for field "MinSampleValue"') and
-        !output.include?('incorrect count for field "MaxSampleValue"')
+        !output.include?('incorrect count for field "MaxSampleValue"') and 
+        !output.include?('wrong data type 6 for "Photoshop"; tag ignored.') and
+        !output.include?('unknown field with tag 37724')
         raise Kakadoer::MalformedImageError
       end
     end

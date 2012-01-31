@@ -25,11 +25,11 @@ module Kakadoer
         end
         # convert jpg to tif
         if is_a_jpg?(file_path) or compressed_tif?(file_path)
-          file_path = tif_tempfile_path(file_path)
+          file_path = tif_tempfile_path(file_path)          
         end
         begin
           cmd = Command.new(file_path, @output_directory)
-          response = cmd.kakado
+          response = cmd.kakado          
         rescue
           @log << 'ERROR: ' + file_path
           next
@@ -50,7 +50,7 @@ module Kakadoer
       self
     end
 
-    def tif_tempfile_path(file_path)
+    def tif_tempfile_path(file_path)      
       magick_image = Magick::Image.read(file_path).first
       magick_image.write('ppm:' + tempfile(file_path))
       # clean up for rmagick since it won't do it
@@ -85,7 +85,9 @@ module Kakadoer
     end
 
     def tif_files
-      Dir.glob(File.expand_path(File.join(@input_directory, '*.{TIF,tif,JPG,jpg}')))
+      files = []      
+      files << Dir.glob(File.expand_path(File.join(@input_directory, '*.{TIF,tif,JPG,jpg}')))
+      files.flatten
     end
 
     def filenames

@@ -25,3 +25,5 @@ pkg
 test/tmp/*
 !.gitignore
 
+.redcar
+

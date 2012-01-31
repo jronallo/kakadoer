@@ -26,49 +26,53 @@ EOS
   opt :ver, "Output the version number and exit."
   opt :file, "Takes a tif file and creates the JP2 in the current working directory or --output directory", :type => String
   opt :cmd, "Output the kakadu command that will be used when used in conjunction with --file."
+  opt :logger, "Create log in current directory."
 end
 
 if opts[:ver]
   puts File.read(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'VERSION' ) )
   exit
 end
-
-# FIXME: file option does not work for jpgs
-if opts[:file]
-#  `kdu_compress -i #{opts[:file]} -o #{Dir.pwd}/. #{KAKADU_OPTIONS}`
-  command = Kakadoer::Command.new(opts[:file])
-  puts command.kakado_cmd if opts[:cmd]
-  output = command.kakado
-else
-  if opts[:input]
-    input = opts[:input]
+begin
+  # FIXME: file option does not work for jpgs
+  if opts[:file]
+  #  `kdu_compress -i #{opts[:file]} -o #{Dir.pwd}/. #{KAKADU_OPTIONS}`
+    command = Kakadoer::Command.new(opts[:file])
+    puts command.kakado_cmd if opts[:cmd]
+    output = command.kakado
   else
-    input = Dir.pwd
-  end
-
-  if opts[:output]
-    output = opts[:output]
-  else
-    output = File.join(Dir.pwd, '..', 'jp2s')
-    unless File.exists? output
-      Dir.mkdir(output)
+    if opts[:input]
+      input = opts[:input]
+    else
+      input = Dir.pwd
+    end
+  
+    if opts[:output]
+      output = opts[:output]
+    else
+      output = File.join(Dir.pwd, '..', 'jp2s')
+      unless File.exists? output
+        Dir.mkdir(output)
+      end
+    end
+  
+    kakado = Kakadoer::Batch.new(input, output)
+    kakado.logger = true if opts[:logger]
+    num_to_process = kakado.filenames.length
+    puts "Number of files to process: " + num_to_process.to_s + "\n\n"
+    exit if num_to_process == 0
+  
+    kakado.create_jp2s
+    if opts[:logger]
+      File.open('kakado_log.txt', 'a') do |fh|
+        fh.puts kakado.log
+      end
     end
   end
-
-  kakado = Kakadoer::Batch.new(input, output)
-
-  num_to_process = kakado.filenames.length
-  puts "Number of files to process: " + num_to_process.to_s + "\n\n"
-  exit if num_to_process == 0
-
-  kakado.create_jp2s
-#  kakado_output = kakado.log.join("\n")
-
-#  puts kakado_output
-#  timestamp = Time.now.strftime("%Y%d%m-%H%M%S")
-#  File.open('output-' + timestamp + '.txt', 'w') do |fh|
-#    fh.puts num_to_process
-#    fh.puts kakado_output
-#  end
+  
+rescue => e
+  puts "Error!"
+  pp e
+  pp e.backtrace
 end
 

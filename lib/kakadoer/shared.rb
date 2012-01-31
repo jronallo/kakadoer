@@ -17,7 +17,7 @@ module Kakadoer
       end
     end
 
-    def extension(file_path)
+    def extension(file_path)  
       File.extname(file_path)
     end
 
