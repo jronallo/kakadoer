@@ -12,7 +12,7 @@ begin
     gem.authors = ["Jason Ronallo"]
     gem.add_development_dependency "shoulda", ">= 0"
     gem.add_dependency "trollop", ">= 0"
-    gem.add_dependency "rmagick"
+    gem.add_dependency "mini_magick"
     gem.files = FileList["[A-Z]*", "{bin,lib}/**/*"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -45,7 +45,7 @@ task :test => :check_dependencies
 
 task :default => :test
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 

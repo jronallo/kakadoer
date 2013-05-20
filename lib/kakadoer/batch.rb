@@ -25,11 +25,11 @@ module Kakadoer
         end
         # convert jpg to tif
         if is_a_jpg?(file_path) or compressed_tif?(file_path)
-          file_path = tif_tempfile_path(file_path)          
+          file_path = tif_tempfile_path(file_path)
         end
         begin
           cmd = Command.new(file_path, @output_directory)
-          response = cmd.kakado          
+          response = cmd.kakado
         rescue
           @log << 'ERROR: ' + file_path
           next
@@ -44,14 +44,14 @@ module Kakadoer
         @log << output_path(file_path) if @logger
         @processed_num += 1
         @log << separator if @logger
-        
+
         FileUtils.rm tempfile(file_path) if File.exists? tempfile(file_path)
       end
       self
     end
 
-    def tif_tempfile_path(file_path)      
-      magick_image = Magick::Image.read(file_path).first
+    def tif_tempfile_path(file_path)
+      magick_image = MiniMagick::Image.read(file_path).first
       magick_image.write('ppm:' + tempfile(file_path))
       # clean up for rmagick since it won't do it
       magick_image.destroy!
@@ -66,7 +66,7 @@ module Kakadoer
     def is_a_jpg?(file_path)
       ['.JPG', '.jpg'].include? File.extname(file_path)
     end
-    
+
     def compressed_tif?(file_path)
       if ['.tif', '.TIF'].include? extension(file_path)
         compression = `identify -format "%C" #{file_path}`.chomp
@@ -85,7 +85,7 @@ module Kakadoer
     end
 
     def tif_files
-      files = []      
+      files = []
       files << Dir.glob(File.expand_path(File.join(@input_directory, '*.{TIF,tif,JPG,jpg}')))
       files.flatten
     end
